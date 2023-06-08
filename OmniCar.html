@@ -50,95 +50,88 @@
     <p>
       For the car controller i have a MQTT client and a simple file to handle all sorts of movement.
     </p>
-    <code>
-
-    from gpiozero import Motor
-    import RPi.GPIO as GPIO
-    '''these are setting the GPIO pins for the DC motors '''
-    motor = Motor(forward=4, backward=14)
-    motor1 = Motor(forward=17, backward=18)
-    motor3 = Motor(forward=22, backward=23)
-    motor4 = Motor(forward=9, backward=25)
-
-    sensor = 26
-    sensor1 = 19
-    sensor2 = 16
-    sensor3 = 20
-
-    GPIO.setup(sensor,GPIO.IN)
-    GPIO.setup(sensor1,GPIO.IN)
-    GPIO.setup(sensor2,GPIO.IN)
-    GPIO.setup(sensor3,GPIO.IN)
-
-    def forward(speed):
-    if GPIO.input(sensor2):
-      motor.forward(speed)
-      motor1.forward(speed)
-      motor3.forward(speed)
-      motor4.forward(speed)
-
-
-    def backward(speed):
-    if GPIO.input(sensor):
-      motor.backward(speed)
-      motor1.backward(speed)
-      motor3.backward(speed)
-      motor4.backward(speed)
-
-
-    def right(speed):
-    if GPIO.input(sensor3):
-      motor.backward(speed)
-      motor1.forward(speed)
-      motor3.backward(speed)
-      motor4.forward(speed)
-
-
-    def left(speed):
-    if GPIO.input(sensor1):
-      motor.forward(speed)
-      motor1.backward(speed)
-      motor3.forward(speed)
-      motor4.backward(speed)
-
-
-    def stop():
-    motor.stop()
-    motor1.stop()
-    motor3.stop()
-    motor4.stop()
-
-
-    def turn_left(speed=1):
-    motor.forward(speed)
-    motor1.forward(speed)
-    motor3.backward(speed)
-    motor4.backward(speed)
-
-
-    def turn_right(speed=1):
-    motor4.forward(speed)
-    motor3.forward(speed)
-    motor.backward(speed)
-    motor1.backward(speed)
-
-
-    def on_message(client, userdata, msg):
-    msg = str(msg.payload.decode("utf-8", "ignore"))
-    if msg == "forward":
-      forward(1)
-    elif msg == "backwards":
-      backward(1)
-    elif msg == "left":
-      left(1)
-    elif msg == "turnleft":
-      turn_left(1)
-    elif msg == "right":
-      right(1)
-    elif msg == "turnright":
-      turn_right(1)
-    elif msg == "stop":
-      stop()
-
-    </code>
+    <pre style="background-color: #f5f5f5; border: 1px solid #ccc; padding: 10px; font-size: 1.1em; overflow-x: auto; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word !important;">
+      from gpiozero import Motor
+      import RPi.GPIO as GPIO
+      
+      # these are setting the GPIO pins for the DC motors
+      motor = Motor(forward=4, backward=14)
+      motor1 = Motor(forward=17, backward=18)
+      motor3 = Motor(forward=22, backward=23)
+      motor4 = Motor(forward=9, backward=25)
+      
+      sensor = 26
+      sensor1 = 19
+      sensor2 = 16
+      sensor3 = 20
+      
+      GPIO.setup(sensor,GPIO.IN)
+      GPIO.setup(sensor1,GPIO.IN)
+      GPIO.setup(sensor2,GPIO.IN)
+      GPIO.setup(sensor3,GPIO.IN)
+      
+      def forward(speed):
+          if GPIO.input(sensor2):
+              motor.forward(speed)
+              motor1.forward(speed)
+              motor3.forward(speed)
+              motor4.forward(speed)
+      
+      def backward(speed):
+          if GPIO.input(sensor):
+              motor.backward(speed)
+              motor1.backward(speed)
+              motor3.backward(speed)
+              motor4.backward(speed)
+      
+      def right(speed):
+          if GPIO.input(sensor3):
+              motor.backward(speed)
+              motor1.forward(speed)
+              motor3.backward(speed)
+              motor4.forward(speed)
+      
+      def left(speed):
+          if GPIO.input(sensor1):
+              motor.forward(speed)
+              motor1.backward(speed)
+              motor3.forward(speed)
+              motor4.backward(speed)
+      
+      def stop():
+          motor.stop()
+          motor1.stop()
+          motor3.stop()
+          motor4.stop()
+      
+      def turn_left(speed=1):
+          motor.forward(speed)
+          motor1.forward(speed)
+          motor3.backward(speed)
+          motor4.backward(speed)
+      
+      def turn_right(speed=1):
+          motor4.forward(speed)
+          motor3.forward(speed)
+          motor.backward(speed)
+          motor1.backward(speed)
+      
+      def on_message(client, userdata, msg):
+          msg = str(msg.payload.decode("utf-8", "ignore"))
+          if msg == "forward":
+              forward(1)
+          elif msg == "backwards":
+              backward(1)
+          elif msg == "left":
+              left(1)
+          elif msg == "turnleft":
+              turn_left(1)
+          elif msg == "right":
+              right(1)
+          elif msg == "turnright":
+              turn_right(1)
+          elif msg == "stop":
+              stop()
+      </pre>
+      
   </body>
