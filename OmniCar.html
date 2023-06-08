@@ -18,9 +18,19 @@
       <li>Raspberry Pi</li>
       <li>GPIO</li>
     </ul>
-    
+    <p>
+      I used python because for hardware this has been my default on raspberry PI projects.
+      React native on the other hand was completely new to me The reason I used it was purely because
+      I am familiar with react and this was the easiest for me. Plus it is also both compatible with IOS and android.
+    </p>
+    <h3>IR Sensors</h3>
+    <p>
+      The reason for using ir sensors over the alternatives like the ultrasonic distance sensor was simply its digital output,
+      as that works with the raspberry pi and also its quick response time as the car can move faster then the ultrasonic sensor can respond.
+    </p>
+   
     <h2>Project Details</h2>
-    <p>The omni-directional car project involved designing and assembling a unique car mechanism that allows it to move effortlessly in any direction. The car is equipped with multiple wheels that can move independently, enabling both translation and rotation in any combination, resulting in omni-directional mobility.</p>
+    <p>The Omni-directional car project involved designing and assembling a unique car mechanism that allows it to move effortlessly in any direction. The car is equipped with multiple wheels that can move independently, enabling both translation and rotation in any combination, resulting in omni-directional mobility.</p>
     
     <p>To ensure the car's safety and prevent collisions, I integrated distance IR sensors into its design. These sensors provide real-time feedback on the proximity of obstacles, allowing the car to make informed decisions and automatically adjust its movement to avoid potential collisions.</p>
     
@@ -35,4 +45,99 @@
     
     <p>The app's live video feed from the car's onboard camera enhances situational awareness, enabling users to view the surroundings and navigate effectively. The combination of video streaming and MQTT-based control makes the app a powerful tool for remotely operating and monitoring the omni-directional car.</p>
     
+    <h2>Car Controller</h2>
+    <p>
+      For the car controller i have a MQTT client and a simple file to handle all sorts of movement.
+    </p>
+    <code>
+
+    from gpiozero import Motor
+    import RPi.GPIO as GPIO
+    '''these are setting the GPIO pins for the DC motors '''
+    motor = Motor(forward=4, backward=14)
+    motor1 = Motor(forward=17, backward=18)
+    motor3 = Motor(forward=22, backward=23)
+    motor4 = Motor(forward=9, backward=25)
+
+    sensor = 26
+    sensor1 = 19
+    sensor2 = 16
+    sensor3 = 20
+
+    GPIO.setup(sensor,GPIO.IN)
+    GPIO.setup(sensor1,GPIO.IN)
+    GPIO.setup(sensor2,GPIO.IN)
+    GPIO.setup(sensor3,GPIO.IN)
+
+    def forward(speed):
+    if GPIO.input(sensor2):
+      motor.forward(speed)
+      motor1.forward(speed)
+      motor3.forward(speed)
+      motor4.forward(speed)
+
+
+    def backward(speed):
+    if GPIO.input(sensor):
+      motor.backward(speed)
+      motor1.backward(speed)
+      motor3.backward(speed)
+      motor4.backward(speed)
+
+
+    def right(speed):
+    if GPIO.input(sensor3):
+      motor.backward(speed)
+      motor1.forward(speed)
+      motor3.backward(speed)
+      motor4.forward(speed)
+
+
+    def left(speed):
+    if GPIO.input(sensor1):
+      motor.forward(speed)
+      motor1.backward(speed)
+      motor3.forward(speed)
+      motor4.backward(speed)
+
+
+    def stop():
+    motor.stop()
+    motor1.stop()
+    motor3.stop()
+    motor4.stop()
+
+
+    def turn_left(speed=1):
+    motor.forward(speed)
+    motor1.forward(speed)
+    motor3.backward(speed)
+    motor4.backward(speed)
+
+
+    def turn_right(speed=1):
+    motor4.forward(speed)
+    motor3.forward(speed)
+    motor.backward(speed)
+    motor1.backward(speed)
+
+
+    def on_message(client, userdata, msg):
+    msg = str(msg.payload.decode("utf-8", "ignore"))
+    if msg == "forward":
+      forward(1)
+    elif msg == "backwards":
+      backward(1)
+    elif msg == "left":
+      left(1)
+    elif msg == "turnleft":
+      turn_left(1)
+    elif msg == "right":
+      right(1)
+    elif msg == "turnright":
+      turn_right(1)
+    elif msg == "stop":
+      stop()
+
+    </code>
   </body>
